@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THREAD & CO — Fashion, Sorted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#FAF6EF;
+    --ink:#181512;
+    --coral:#E8395F;
+    --coral-dark:#C22548;
+    --mustard:#D9A62C;
+    --muted:#8A8172;
+    --card:#ffffff;
+    --line:#E9E2D6;
+    --font-display:'Fraunces', serif;
+    --font-body:'Inter', sans-serif;
+  }
+  :root:not([data-theme="light"]){
+    --ivory:#FAF6EF; --ink:#181512; --card:#ffffff; --line:#E9E2D6; --muted:#8A8172;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ivory:#15130F; --ink:#F3EEE4; --card:#1F1C17; --line:#332E26; --muted:#A69C8C;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ivory:#15130F; --ink:#F3EEE4; --card:#1F1C17; --line:#332E26; --muted:#A69C8C;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ivory);
+    color:var(--ink);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+    transition:background .3s ease,color .3s ease;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:var(--ivory);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-wrap{
+    max-width:1240px;margin:0 auto;
+    display:flex;align-items:center;gap:24px;
+    padding:16px 24px;
+  }
+  .logo{
+    font-family:var(--font-display);
+    font-weight:700;font-size:1.5rem;
+    letter-spacing:-0.02em;
+    white-space:nowrap;
+  }
+  .logo span{color:var(--coral);}
+  .search-box{
+    flex:1;
+    display:flex;align-items:center;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:10px 18px;
+    gap:10px;
+    max-width:480px;
+  }
+  .search-box input{
+    border:none;outline:none;background:transparent;
+    font-family:var(--font-body);font-size:.9rem;color:var(--ink);width:100%;
+  }
+  .search-box svg{flex-shrink:0;opacity:.5;}
+  .nav-actions{display:flex;align-items:center;gap:18px;margin-left:auto;}
+  .icon-btn{
+    position:relative;background:none;border:none;cursor:pointer;
+    color:var(--ink);padding:6px;display:flex;
+  }
+  .cart-count{
+    position:absolute;top:-2px;right:-2px;
+    background:var(--coral);color:#fff;
+    font-size:.65rem;font-weight:700;
+    width:17px;height:17px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  nav.categories{
+    max-width:1240px;margin:0 auto;
+    display:flex;gap:28px;padding:0 24px 14px;
+    overflow-x:auto;
+  }
+  nav.categories button{
+    background:none;border:none;cursor:pointer;
+    font-family:var(--font-body);font-weight:600;font-size:.82rem;
+    color:var(--muted);padding:6px 2px;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  nav.categories button.active,
+  nav.categories button:hover{color:var(--ink);border-color:var(--coral);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    max-width:1240px;margin:0 auto;
+    padding:56px 24px 48px;
+    display:grid;grid-template-columns:1.1fr .9fr;gap:40px;
+    align-items:center;
+  }
+  .hero h1{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(2.4rem,5vw,4.2rem);
+    line-height:1.02;
+    letter-spacing:-0.01em;
+    margin:0 0 18px;
+  }
+  .hero h1 em{font-style:italic;color:var(--coral);}
+  .hero p{
+    font-size:1.02rem;color:var(--muted);max-width:38ch;margin:0 0 28px;line-height:1.55;
+  }
+  .hero-cta{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--ink);color:var(--ivory);
+    padding:14px 28px;border-radius:999px;
+    font-weight:600;font-size:.92rem;
+    border:none;cursor:pointer;
+    transition:transform .15s ease;
+  }
+  .hero-cta:hover{transform:translateY(-2px);}
+  .hero-art{
+    position:relative;aspect-ratio:4/5;border-radius:24px;
+    background:linear-gradient(155deg,var(--coral) 0%,var(--coral-dark) 55%,#7A1830 100%);
+    overflow:hidden;
+    display:flex;align-items:flex-end;
+  }
+  .hero-art::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 75% 18%, rgba(255,255,255,.35) 0, transparent 40%),
+      repeating-linear-gradient(115deg, rgba(255,255,255,.06) 0 2px, transparent 2px 26px);
+  }
+  .hero-tag{
+    position:relative;margin:22px;
+    background:rgba(255,255,255,.16);
+    backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.35);
+    color:#fff;padding:14px 18px;border-radius:16px;
+    font-size:.85rem;line-height:1.4;max-width:230px;
+  }
+  .hero-tag strong{display:block;font-family:var(--font-display);font-size:1.3rem;font-weight:600;}
+
+  /* ---------- SECTION HEADINGS ---------- */
+  .section{max-width:1240px;margin:0 auto;padding:8px 24px 56px;}
+  .section-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    margin-bottom:22px;gap:16px;flex-wrap:wrap;
+  }
+  .section-head h2{
+    font-family:var(--font-display);font-weight:600;font-size:1.7rem;margin:0;
+  }
+  .section-head p{color:var(--muted);font-size:.9rem;margin:4px 0 0;}
+
+  /* ---------- GRID / CARDS ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:22px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    transition:box-shadow .2s ease, transform .2s ease;
+  }
+  .card:hover{box-shadow:0 14px 30px -18px rgba(0,0,0,.35);transform:translateY(-3px);}
+  .thumb{
+    aspect-ratio:3/4;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+    transition: opacity 0.2s ease;
+  }
+  .thumb .p-icon{width:46%;height:46%;filter:drop-shadow(0 6px 14px rgba(0,0,0,.18));}
+  .badge{
+    position:absolute;top:10px;left:10px;
+    background:var(--mustard);color:#302200;
+    font-size:.68rem;font-weight:700;padding:4px 9px;border-radius:999px;
+    letter-spacing:.01em;
+    z-index:2;
+  }
+  .wish-btn{
+    position:absolute;top:8px;right:8px;
+    background:rgba(255,255,255,.85);border:none;border-radius:50%;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;transition:background .15s ease;
+    z-index:2;
+  }
+  .wish-btn.active svg{fill:var(--coral);stroke:var(--coral);}
+  .card-body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:6px;flex:1;}
+  .brand{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);}
+  .pname{font-size:.9rem;font-weight:500;line-height:1.3;min-height:2.4em;}
+  .price-row{display:flex;align-items:baseline;gap:8px;margin-top:2px;}
+  .price{font-weight:700;font-size:1rem;}
+  .mrp{font-size:.8rem;color:var(--muted);text-decoration:line-through;}
+  .off{font-size:.78rem;color:#1a7a4a;font-weight:600;}
+  .add-btn{
+    margin-top:10px;
+    background:var(--ink);color:var(--ivory);
+    border:none;border-radius:10px;
+    padding:10px;font-weight:600;font-size:.82rem;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+    transition:background .15s ease;
+  }
+  .add-btn:hover{background:var(--coral);}
+  .add-btn.added{background:#1a7a4a;}
+
+  /* ---------- CART DRAWER ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(15,12,9,.4);
+    opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:60;
+  }
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;top:0;right:0;height:100%;width:min(400px,92vw);
+    background:var(--ivory);z-index:61;
+    box-shadow:-18px 0 40px rgba(0,0,0,.25);
+    transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+    display:flex;flex-direction:column;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{
+    padding:20px 22px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .drawer-head h3{font-family:var(--font-display);font-size:1.3rem;margin:0;font-weight:600;}
+  .drawer-close{background:none;border:none;cursor:pointer;color:var(--ink);}
+  .drawer-items{flex:1;overflow-y:auto;padding:14px 22px;display:flex;flex-direction:column;gap:16px;}
+  .empty-cart{color:var(--muted);text-align:center;padding:60px 10px;font-size:.9rem;}
+  .drawer-item{display:flex;gap:12px;}
+  .di-thumb{
+    width:64px;height:80px;border-radius:10px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;position:relative;
+  }
+  .di-thumb img {width:100%;height:100%;object-fit:cover;}
+  .di-info{flex:1;display:flex;flex-direction:column;gap:4px;}
+  .di-name{font-size:.85rem;font-weight:600;line-height:1.3;}
+  .di-meta{font-size:.75rem;color:var(--muted);}
+  .qty-row{display:flex;align-items:center;gap:10px;margin-top:2px;}
+  .qty-btn{
+    width:24px;height:24px;border-radius:6px;border:1px solid var(--line);
+    background:var(--card);cursor:pointer;font-size:.85rem;line-height:1;
+    display:flex;align-items:center;justify-content:center;color:var(--ink);
+  }
+  .di-remove{background:none;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;margin-top:2px;align-self:flex-start;text-decoration:underline;}
+  .drawer-foot{border-top:1px solid var(--line);padding:18px 22px 24px;}
+  .total-row{display:flex;justify-content:space-between;font-size:.95rem;margin-bottom:14px;}
+  .total-row strong{font-family:var(--font-display);font-size:1.2rem;}
+  .checkout-btn{
+    width:100%;background:var(--coral);color:#fff;border:none;
+    padding:14px;border-radius:12px;font-weight:700;font-size:.92rem;cursor:pointer;
+  }
+  .checkout-btn:hover{background:var(--coral-dark);}
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:34px 24px;text-align:center;
+    color:var(--muted);font-size:.8rem;
+  }
+
+  @media (max-width:760px){
+    .hero{grid-template-columns:1fr;padding-top:32px;}
+    .hero-art{order:-1;aspect-ratio:16/10;}
+    .search-box{display:none;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important;}
+  }
+  :focus-visible{outline:2px solid var(--coral);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <div class="logo">THREAD<span>&</span>CO</div>
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search for kurtas, sneakers, jackets…" aria-label="Search products">
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" aria-label="Wishlist">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.3C0.3 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.3C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.3 4 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>
+      </button>
+      <button class="icon-btn" id="cartBtn" aria-label="Open cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3h2l2.4 12.4a2 2 0 0 0 2 1.6h7.2a2 2 0 0 0 2-1.6L20 7H6"/><circle cx="10" cy="21" r="1"/><circle cx="17" cy="21" r="1"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+  <nav class="categories" id="catNav"></nav>
+</header>
+
+<section class="hero">
+  <div>
+    <h1>Dress like<br>you <em>mean</em> it.</h1>
+    <p>Handpicked drops from independent labels and cult favourites — new arrivals every Friday, curated by people who actually wear this stuff.</p>
+    <button class="hero-cta" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      Shop the edit
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+  <div class="hero-art">
+    <div class="hero-tag"><strong>2,300+</strong>pieces added this season, all under one roof</div>
+  </div>
+</section>
+
+<section class="section" id="shop">
+  <div class="section-head">
+    <div>
+      <h2>Today's edit</h2>
+      <p id="resultCount">Loading products…</p>
+    </div>
+  </div>
+  <div class="grid" id="productGrid"></div>
+</section>
+
+<footer>THREAD & CO — a demo storefront built for you. No real orders, no real payments.</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Shopping cart">
+  <div class="drawer-head">
+    <h3>Your bag</h3>
+    <button class="drawer-close" id="drawerClose" aria-label="Close cart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="total-row"><span>Total</span><strong id="totalPrice">₹0</strong></div>
+    <button class="checkout-btn" id="checkoutBtn">Checkout</button>
+  </div>
+</aside>
+
+<script>
+(function(){
+  // Helper to resolve local Windows/Unix file paths and standard Web URLs cleanly
+  function formatImagePath(pathStr) {
+    if (!pathStr) return "";
+    let cleanPath = pathStr.trim();
+    // Normalize backslashes to forward slashes for URL compatibility
+    cleanPath = cleanPath.replace(/\\/g, '/');
+    // If path starts with Windows drive letter (e.g., C:/), prepend file:/// protocol
+    if (/^[a-zA-Z]:\//.test(cleanPath)) {
+      return 'file:///' + cleanPath;
+    }
+    return cleanPath;
+  }
+
+  const PRODUCTS = [
+    {
+      id: 1, 
+      name: "Full Casual", 
+      brand: "Field & Form", 
+      price: 1799, 
+      mrp: 2599, 
+      cat: "Men", 
+      type: "shirt", 
+      grad: "linear-gradient(155deg,#D9A62C,#8a6a12)", 
+      photoOne: formatImagePath("C:\\Users\\Ruban Lawrence\\Downloads\\azuree\\ones.jpeg")
+    },
+    {
+      id: 2, 
+      name: "Sports", 
+      brand: "North Fold", 
+      price: 2999, 
+      mrp: 3999, 
+      cat: "Men", 
+      type: "jacket", 
+      grad: "linear-gradient(155deg,#4A6FA5,#1f3a5f)", 
+      photoTwo: "C:\\Users\\Ruban Lawrence\\Downloads\\azuree\\twos.jpeg"
+    },
+    {
+      id: 3, 
+      name: "White Shirt", 
+      brand: "Salt & Cloth", 
+      price: 2199, 
+      mrp: 2999, 
+      cat: "Women", 
+      type: "skirt", 
+      grad: "linear-gradient(155deg,#E8395F,#7A1830)", 
+      photoThree: "C:\\Users\\Ruban Lawrence\\Downloads\\azuree\\threes.jpeg"
+    },
+    {
+      id: 4, 
+      name: "Sarees", 
+      brand: "Salt & Cloth", 
+      price: 2199, 
+      mrp: 2999, 
+      cat: "Women", 
+      type: "skirt", 
+      grad: "linear-gradient(155deg,#E8395F,#7A1830)", 
+      photoThree: "C:\\Users\\Ruban Lawrence\\Downloads\\azuree\\aleks.jpeg"
+    },
+
+    {
+      id: 5, 
+      name: "Treking", 
+      brand: "Salt & Cloth", 
+      price: 2199, 
+      mrp: 2999, 
+      cat: "Women", 
+      type: "skirt", 
+      grad: "linear-gradient(155deg,#E8395F,#7A1830)", 
+      photoThree: "C:\\Users\\Ruban Lawrence\\Downloads\\azuree\\snas.jpeg"
+    },
+
+    {
+      id: 6, 
+      name: "Womens Casuals	", 
+      brand: "Salt & Cloth", 
+      price: 2199, 
+      mrp: 2999, 
+      cat: "Women", 
+      type: "skirt", 
+      grad: "linear-gradient(155deg,#E8395F,#7A1830)", 
+      photoThree: "C:\\Users\\Ruban Lawrence\\Downloads\\azuree\\kavs.jpeg"
+    },
+
+    {id:7, name:"Blush Satin Slip Dress", brand:"Salt & Cloth", price:2999, mrp:4199, cat:"Women", type:"dress", grad:"linear-gradient(155deg,#E7B5C4,#9c5468)"},
+    {id:8, name:"Charcoal Tapered Trousers", brand:"North Fold", price:2199, mrp:2899, cat:"Men", type:"trousers", grad:"linear-gradient(155deg,#4a4842,#181512)"},
+    {id:9, name:"Canvas High-Top Sneaker", brand:"Loom House", price:3499, mrp:4499, cat:"Footwear", type:"sneaker", grad:"linear-gradient(155deg,#D9A62C,#E8395F)"},
+    {id:10, name:"Woven Rattan Tote", brand:"Field & Form", price:1299, mrp:1799, cat:"Accessories", type:"tote", grad:"linear-gradient(155deg,#C9A876,#7a6438)"},
+    {id:11, name:"Indigo Selvedge Jacket", brand:"North Fold", price:4599, mrp:5999, cat:"Men", type:"jacket", grad:"linear-gradient(155deg,#2f4a7a,#131f33)"},
+    {id:12, name:"Saffron Layered Necklace", brand:"Loom House", price:899, mrp:1299, cat:"Accessories", type:"necklace", grad:"linear-gradient(155deg,#D9A62C,#8a6a12)"},
+    {id:13, name:"Striped Tee & Shorts Set", brand:"Little Loom", price:899, mrp:1299, cat:"Kids", type:"kids", grad:"linear-gradient(155deg,#E8395F,#D9A62C)"},
+    {id:14, name:"Mini Denim Overalls", brand:"Little Loom", price:1499, mrp:1999, cat:"Kids", type:"kidsdungaree", grad:"linear-gradient(155deg,#4A6FA5,#22385c)"},
+    {id:15, name:"Cotton Rib Briefs — Pack of 3", brand:"Basics Co", price:599, mrp:799, cat:"Innerwear", type:"underwear", grad:"linear-gradient(155deg,#8A8172,#4a4438)"},
+    {id:16, name:"Everyday Cotton Boxers — Pack of 3", brand:"Basics Co", price:649, mrp:899, cat:"Innerwear", type:"underwear", grad:"linear-gradient(155deg,#4A6FA5,#1f3a5f)"},
+    {id:17, name:"Suede Ankle Boot", brand:"Loom House", price:3199, mrp:4299, cat:"Footwear", type:"sneaker", grad:"linear-gradient(155deg,#C9663A,#5c2a15)"},
+  ];
+  const CATS = ["All","Men","Women","Kids","Unisex","Footwear","Innerwear","Accessories"];
+
+  const ICONS = {
+    shirt:`<path d="M36 16 L46 27 L50 23 L54 27 L64 16 L79 29 L69 40 L66 35 L66 84 L34 84 L34 35 L31 40 L21 29 Z"/><line x1="50" y1="38" x2="50" y2="80"/><circle cx="50" cy="46" r="1.4" fill="currentColor" stroke="none"/><circle cx="50" cy="56" r="1.4" fill="currentColor" stroke="none"/><circle cx="50" cy="66" r="1.4" fill="currentColor" stroke="none"/>`,
+    jacket:`<path d="M36 16 L46 26 L50 20 L54 26 L64 16 L80 30 L70 41 L67 36 L67 85 L33 85 L33 36 L30 41 L20 30 Z"/><line x1="43" y1="27" x2="40" y2="80"/><line x1="57" y1="27" x2="60" y2="80"/><rect x="38" y="50" width="8" height="6" rx="1"/><rect x="54" y="50" width="8" height="6" rx="1"/>`,
+    trousers:`<path d="M32 15 H68 L70 40 L74 85 L60 85 L54 45 L50 45 L44 85 L30 85 L34 40 Z"/><line x1="32" y1="24" x2="68" y2="24"/>`,
+    skirt:`<path d="M33 18 H67 L80 84 H20 Z"/><line x1="33" y1="18" x2="33" y2="10"/><line x1="67" y1="18" x2="67" y2="10"/><line x1="33" y1="10" x2="67" y2="10"/><line x1="42" y1="24" x2="38" y2="84"/><line x1="58" y1="24" x2="62" y2="84"/>`,
+    dress:`<path d="M43 13 L38 9 M57 13 L62 9 M43 13 C43 13 38 22 33 48 L26 87 L74 87 L67 48 C62 22 57 13 57 13 C53 19 47 19 43 13 Z"/><line x1="50" y1="30" x2="50" y2="87"/>`,
+    sweater:`<path d="M35 20 L47 30 L50 26 L53 30 L65 20 L80 33 L70 44 L67 38 L67 85 L33 85 L33 38 L30 44 L20 33 Z"/><path d="M42 20 C46 24 54 24 58 20"/>`,
+    sneaker:`<path d="M8 68 C8 58 17 52 27 52 L38 43 C46 37 58 37 66 42 L80 50 C89 53 92 60 91 68 L91 74 H8 Z"/><line x1="8" y1="74" x2="91" y2="74"/><line x1="34" y1="46" x2="46" y2="56"/><line x1="44" y1="41" x2="56" y2="53"/><line x1="54" y1="38" x2="65" y2="50"/>`,
+    tote:`<rect x="20" y="35" width="60" height="50" rx="4"/><path d="M35 35 C35 22 65 22 65 35"/><line x1="20" y1="50" x2="80" y2="50"/>`,
+    necklace:`<circle cx="50" cy="38" r="26" stroke-dasharray="4 5"/><path d="M50 60 L42 74 L58 74 Z"/>`,
+    kids:`<path d="M38 22 L46 30 L50 27 L54 30 L62 22 L74 32 L66 41 L64 37 L64 60 L36 60 L36 37 L34 41 L26 32 Z"/><path d="M36 60 L34 85 M64 60 L66 85" /><path d="M40 60 L38 85 H48 L50 66 L52 85 H62 L60 60"/><path d="M76 24 L79 30 L85 31 L80 35 L82 41 L76 38 L70 41 L72 35 L67 31 L73 30 Z" stroke-width="2"/>`,
+    kidsdungaree:`<path d="M34 30 H40 V20 H60 V30 H66 L70 85 H56 L52 55 L48 55 L44 85 H30 Z"/><circle cx="40" cy="35" r="2" fill="currentColor" stroke="none"/><circle cx="60" cy="35" r="2" fill="currentColor" stroke="none"/>`,
+    underwear:`<path d="M18 22 H82 L79 44 C79 56 70 62 60 62 C55 62 53 68 50 68 C47 68 45 62 40 62 C30 62 21 56 21 44 Z"/><line x1="18" y1="22" x2="82" y2="22"/>`,
+  };
+
+  function iconSVG(type){
+    const inner = ICONS[type] || ICONS.shirt;
+    return `<svg class="p-icon" viewBox="0 0 100 100" fill="none" stroke="rgba(255,255,255,.94)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+  }
+
+  function getProductImage(p){
+    const photoUrl = p.photoOne || p.photoTwo || p.photoThree || p.photoFour || p.photoFive;
+    if(photoUrl){
+      const fallbackSvg = iconSVG(p.type).replace(/"/g, "'");
+      return `<img src="${photoUrl}" alt="${p.name}" onerror="this.onerror=null; this.style.display='none'; this.insertAdjacentHTML('afterend', &quot;${fallbackSvg}&quot;);">`;
+    }
+    return iconSVG(p.type);
+  }
+
+  let activeCat = "All";
+  let cart = {}; // id -> qty
+  let wishlist = new Set();
+
+  const fmt = n => "₹" + n.toLocaleString("en-IN");
+
+  function loadCart(){
+    try{
+      const raw = localStorage.getItem("tc_cart");
+      if(raw) cart = JSON.parse(raw);
+    }catch(e){ cart = {}; }
+  }
+  function saveCart(){
+    try{ localStorage.setItem("tc_cart", JSON.stringify(cart)); }catch(e){}
+  }
+
+  function renderCats(){
+    const nav = document.getElementById("catNav");
+    nav.innerHTML = "";
+    CATS.forEach(c=>{
+      const b = document.createElement("button");
+      b.textContent = c;
+      if(c===activeCat) b.classList.add("active");
+      b.onclick = ()=>{ activeCat=c; renderCats(); renderGrid(); };
+      nav.appendChild(b);
+    });
+  }
+
+  function renderGrid(){
+    const grid = document.getElementById("productGrid");
+    const list = activeCat==="All" ? PRODUCTS : PRODUCTS.filter(p=>p.cat===activeCat);
+    document.getElementById("resultCount").textContent = list.length + " pieces" + (activeCat==="All" ? "" : " in " + activeCat);
+    grid.innerHTML = "";
+    list.forEach(p=>{
+      const off = Math.round((1 - p.price/p.mrp)*100);
+      const inCart = !!cart[p.id];
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="thumb" style="background:${p.grad}">
+          ${getProductImage(p)}
+          <span class="badge">${off}% OFF</span>
+          <button class="wish-btn ${wishlist.has(p.id)?'active':''}" aria-label="Add to wishlist" data-id="${p.id}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.3C0.3 8 2 4.5 5.6 4c2.2-.3 4 .9 6.4 3.3C14.4 4.9 16.2 3.7 18.4 4c3.6.5 5.3 4 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="brand">${p.brand}</div>
+          <div class="pname">${p.name}</div>
+          <div class="price-row">
+            <span class="price">${fmt(p.price)}</span>
+            <span class="mrp">${fmt(p.mrp)}</span>
+            <span class="off">${off}% off</span>
+          </div>
+          <button class="add-btn ${inCart?'added':''}" data-id="${p.id}">
+            ${inCart ? "Added ✓" : "Add to cart"}
+          </button>
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    grid.querySelectorAll(".add-btn").forEach(btn=>{
+      btn.onclick = ()=>{
+        const id = Number(btn.dataset.id);
+        cart[id] = (cart[id]||0) + 1;
+        saveCart();
+        updateCartUI();
+        btn.textContent = "Added ✓";
+        btn.classList.add("added");
+      };
+    });
+    grid.querySelectorAll(".wish-btn").forEach(btn=>{
+      btn.onclick = ()=>{
+        const id = Number(btn.dataset.id);
+        if(wishlist.has(id)) wishlist.delete(id); else wishlist.add(id);
+        btn.classList.toggle("active");
+      };
+    });
+  }
+
+  function cartCountTotal(){
+    return Object.values(cart).reduce((a,b)=>a+b,0);
+  }
+  function cartPriceTotal(){
+    return Object.entries(cart).reduce((sum,[id,qty])=>{
+      const p = PRODUCTS.find(x=>x.id===Number(id));
+      return sum + (p ? p.price*qty : 0);
+    },0);
+  }
+
+  function renderDrawer(){
+    const wrap = document.getElementById("drawerItems");
+    const ids = Object.keys(cart).filter(id=>cart[id]>0);
+    if(ids.length===0){
+      wrap.innerHTML = `<div class="empty-cart">Your bag is empty.<br>Go find something good.</div>`;
+    } else {
+      wrap.innerHTML = "";
+      ids.forEach(id=>{
+        const p = PRODUCTS.find(x=>x.id===Number(id));
+        const qty = cart[id];
+        const row = document.createElement("div");
+        row.className = "drawer-item";
+        row.innerHTML = `
+          <div class="di-thumb" style="background:${p.grad}">${getProductImage(p)}</div>
+          <div class="di-info">
+            <div class="di-name">${p.name}</div>
+            <div class="di-meta">${p.brand} · ${fmt(p.price)}</div>
+            <div class="qty-row">
+              <button class="qty-btn" data-act="dec" data-id="${p.id}">−</button>
+              <span>${qty}</span>
+              <button class="qty-btn" data-act="inc" data-id="${p.id}">+</button>
+            </div>
+            <button class="di-remove" data-act="rm" data-id="${p.id}">Remove</button>
+          </div>`;
+        wrap.appendChild(row);
+      });
+      wrap.querySelectorAll("[data-act]").forEach(btn=>{
+        btn.onclick = ()=>{
+          const id = btn.dataset.id;
+          const act = btn.dataset.act;
+          if(act==="inc") cart[id] = (cart[id]||0)+1;
+          if(act==="dec") cart[id] = Math.max(0,(cart[id]||0)-1);
+          if(act==="rm") cart[id] = 0;
+          saveCart();
+          updateCartUI();
+        };
+      });
+    }
+    document.getElementById("totalPrice").textContent = fmt(cartPriceTotal());
+  }
+
+  function updateCartUI(){
+    document.getElementById("cartCount").textContent = cartCountTotal();
+    renderDrawer();
+    renderGrid();
+  }
+
+  function openDrawer(){
+    document.getElementById("drawer").classList.add("open");
+    document.getElementById("overlay").classList.add("open");
+  }
+  function closeDrawer(){
+    document.getElementById("drawer").classList.remove("open");
+    document.getElementById("overlay").classList.remove("open");
+  }
+
+  document.getElementById("cartBtn").onclick = openDrawer;
+  document.getElementById("drawerClose").onclick = closeDrawer;
+  document.getElementById("overlay").onclick = closeDrawer;
+  document.getElementById("checkoutBtn").onclick = ()=>{
+    if(cartCountTotal()===0){ return; }
+    alert("This is a demo storefront — checkout isn't wired to real payments. Your total was " + fmt(cartPriceTotal()) + ".");
+  };
+
+  loadCart();
+  renderCats();
+  updateCartUI();
+})();
+</script>
+</body>
+</html>
